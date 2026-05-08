@@ -5,6 +5,30 @@ import { getGraphs, postGraph, postUser } from "./dbutils";
 import { UserType } from "./types/User";
 import { GoogleSheetAPI } from "./types/externalAPI";
 
+// Mapeo de IDs de carrera de LUDO3 a IDs de FIUBA-Map.
+// Se usan los planes anteriores a 2020 porque sus IDs son códigos numéricos del SIU
+// (ej. "75.40") que coinciden con los códigos que manda LUDO3.
+// Los planes 2020 usan IDs alfabéticos (ej. "AMII") que no coinciden.
+const LUDO3_CARRERA_MAP: Record<string, string> = {
+  Informatica: "informatica",
+  Sistemas:    "sistemas",
+  Civil:       "civil",
+  Mecanica:    "mecanica",
+  Electrica:   "electricista",
+  Electronica: "electronica",
+  Industrial:  "industrial",
+  Quimica:     "quimica",
+  Agrimensura: "agrimensura",
+  Alimentos:   "alimentos",
+  Naval:       "naval",
+  Petroleo:    "petroleo",
+};
+
+type Ludo3Init = {
+  carrera: string;
+  materias: Record<string, { aprobada: boolean; nota?: number }>;
+};
+
 // La base de datos se parte en dos tablas (relacional... ponele)
 // La clave que une a las bases de datos es la combinación de padron y carrera
 // Por un lado, se guarda en allLogins [padron, carrera, orientacion, findecarrera]
@@ -40,9 +64,30 @@ const Login = (): UserType.Context => {
   // loggingIn es para cuando la pagina esta cargando todos los datos del usuario
   const [loggingIn, setLoggingIn] = React.useState(false);
 
-  // On boot nos fijamos si hay un padron inicial del localStorage
-  // Si existe, lo usamos para loguear al usuario
+  // On boot: si viene desde LUDO3 usamos los datos inyectados; si no, flujo normal con padron
   React.useEffect(() => {
+    const ludo3 = (window as any).__LUDO3_INIT__ as Ludo3Init | undefined;
+    if (ludo3?.carrera) {
+      const carreraid = LUDO3_CARRERA_MAP[ludo3.carrera] ?? "informatica";
+      const carrera = CARRERAS.find((c) => c.id === carreraid) ?? initialUser.carrera;
+
+      const rawMaterias = ludo3.materias ?? {};
+      const materias = Object.keys(rawMaterias)
+        .filter((id) => rawMaterias[id].aprobada)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((id) => ({ id, nota: rawMaterias[id].nota ?? 4 } as any));
+
+      setUser({
+        padron: "ludo3",
+        carrera,
+        orientacion: null,
+        finDeCarrera: null,
+        allLogins: [{ carreraid: carrera.id, orientacionid: undefined, findecarreraid: undefined }],
+        maps: [{ carreraid: carrera.id, map: { materias } }],
+      });
+      return;
+    }
+
     if (padronInput) {
       login(padronInput);
     }
