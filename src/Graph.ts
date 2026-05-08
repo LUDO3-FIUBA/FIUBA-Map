@@ -656,6 +656,33 @@ const Graph = (userContext: UserType.Context): GraphType.Context => {
     network.fit();
   };
 
+  // Integración con Ludo: recibe las materias aprobadas del alumno via postMessage
+  // Mensaje esperado: { type: "LUDO_SET_MATERIAS", materias: [{ id: string, nota: number }] }
+  // El id corresponde al codigo de la materia en el SIU (ej: "81.01")
+  // La nota sigue la misma convencion que Node.aprobar(): -1 = en final, 0 = equivalencia, 4-10 = nota
+  React.useEffect(() => {
+    if (!network) return;
+    const handleLudoMessage = (event: MessageEvent) => {
+      if (event.data?.type !== "LUDO_SET_MATERIAS") return;
+      const materias: { id: string; nota: number }[] = event.data.materias ?? [];
+      const toUpdate: NodeType[] = [];
+      materias.forEach(({ id, nota }) => {
+        const node = getNode(id);
+        if (!node) return;
+        const updated = node.aprobar(nota);
+        if (updated) toUpdate.push(updated);
+      });
+      if (!toUpdate.length) return;
+      nodes.update(toUpdate);
+      actualizar();
+      actualizarNiveles();
+      showRelevantes();
+    };
+    window.addEventListener("message", handleLudoMessage);
+    return () => window.removeEventListener("message", handleLudoMessage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [network]);
+
   // Cuando un grupo tiene muchas materias (por ej: tengo 40 electivas), queremos que no sea una columna de muchas materias al hilo
   // Entonces, hacemos que se muestren en columnas de a 7 materias, ordenadas por prioridad (aprobadas mas arriba que desaprobadas, por ej)
   const balanceSinNivel = (group: NodeType[], lastLevel: number) => {
