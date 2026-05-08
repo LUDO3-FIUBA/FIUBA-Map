@@ -26,7 +26,7 @@
     "prettier": "^3.2.4",
     "typescript": "^4.9.5"
   },
-  "homepage": "https://fede.dm/FIUBA-Map",
+  "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
