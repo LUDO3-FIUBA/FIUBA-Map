@@ -1,0 +1,23 @@
+package.json
+  ai_agent 26,34-36
+package-lock.json
+  ai_agent 31,8773-8778,10078-10103,10741-10785,19144-19164,19759-19777
+src/User.ts
+  s_4d9056a3efbb15::t_14c29944ed7edc 8-31,68,70-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.6",
+  "base_commit_sha": "7b685db5a33ea0b4bc5558e409e9c63c5d3e466f",
+  "prompts": {},
+  "sessions": {
+    "s_4d9056a3efbb15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "282dedd0-f1fd-47fd-9265-660ba1eda0eb",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Luca Salluzzi <luca.salluzzi@mercadolibre.com>"
+    }
+  }
+}
