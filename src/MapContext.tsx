@@ -19,6 +19,7 @@ export const MapProvider = ({ children }: React.PropsWithChildren) => {
       if (event.data?.type !== "LUDO_INIT") return;
       const carreraId: string = String(event.data.carreraId ?? "");
       const padron: string = String(event.data.padron ?? "");
+      user.setIsLudoMode(true);
       (window as any).ReactNativeWebView?.postMessage(JSON.stringify({ type: "FIUBA_MAP_LOG", msg: `LUDO_INIT received: padron=${padron} carreraId=${carreraId}` }));
       if (carreraId) {
         const carrera = CARRERAS.find((c) => c.id === carreraId);

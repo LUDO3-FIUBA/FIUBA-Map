@@ -18,7 +18,7 @@ import { Property } from "csstype";
 // Si no, muestra un input para loguearse (o un menu del usuario loguead) y
 //  un dropdown para elegir las carrera
 const Header = () => {
-  const { logged } = React.useContext(UserContext);
+  const { logged, isLudoMode } = React.useContext(UserContext);
   const { displayedNode } = React.useContext(GraphContext);
   const CommonProps = {
     height: { base: "8.7rem", md: "4.5rem" },
@@ -54,7 +54,7 @@ const Header = () => {
       </ScaleFade>
       {!displayedNode && (
         <Flex {...CommonProps} {...(!displayedNode && FlexProps)}>
-          {logged ? <UserMenu /> : <PadronInput />}
+          {!isLudoMode && (logged ? <UserMenu /> : <PadronInput />)}
           <DropdownCarreras />
         </Flex>
       )}

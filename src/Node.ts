@@ -179,13 +179,13 @@ class Node implements NodeType {
     this.group = grupoDefault;
 
     let labelDefault = breakWords(this.materia);
-    if (showLabels && this.id !== "CBC") {
+    if (this.id !== "CBC") {
       if (this.aprobada && this.nota > 0)
         labelDefault += "\n[" + this.nota + "]";
       else if (this.aprobada && this.nota === 0)
         labelDefault += "\n[Equivalencia]";
-      else if (this.nota === -1) labelDefault += "\n[En Final]";
-      else if (this.cuatrimestre === getCurrentCuatri())
+      else if (showLabels && this.nota === -1) labelDefault += "\n[En Final]";
+      else if (showLabels && this.cuatrimestre === getCurrentCuatri())
         labelDefault += "\n[Cursando]";
     }
     this.label = labelDefault;

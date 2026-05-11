@@ -105,6 +105,7 @@ export namespace UserType {
     loading: boolean;
     user: Info;
     logged: boolean;
+    isLudoMode: boolean;
     padronInput: string;
     loggingIn: boolean;
 
@@ -114,6 +115,7 @@ export namespace UserType {
     logout(): void;
     setUser: React.Dispatch<React.SetStateAction<Info>>;
     setPadronInput: React.Dispatch<React.SetStateAction<string>>;
+    setIsLudoMode: React.Dispatch<React.SetStateAction<boolean>>;
     saveUserGraph: SaveGraph;
   }
 
