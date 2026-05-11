@@ -238,6 +238,8 @@ const Graph = (userContext: UserType.Context): GraphType.Context => {
     });
 
     setNetwork(network);
+    (window as any).__ludoNetwork = network;
+    (window as any).ReactNativeWebView?.postMessage(JSON.stringify({ type: "FIUBA_MAP_NETWORK_READY", carreraKey: user.carrera.id }));
   };
 
   // El graph es el contenido de la red. Al cambiar la carrera se rellena con lo que tiene el JSON
@@ -666,12 +668,17 @@ const Graph = (userContext: UserType.Context): GraphType.Context => {
       if (event.data?.type !== "LUDO_SET_MATERIAS") return;
       const materias: { id: string; nota: number }[] = event.data.materias ?? [];
       const toUpdate: NodeType[] = [];
+      const notFound: string[] = [];
       materias.forEach(({ id, nota }) => {
         const node = getNode(id);
-        if (!node) return;
+        if (!node) { notFound.push(id); return; }
         const updated = node.aprobar(nota);
         if (updated) toUpdate.push(updated);
       });
+      (window as any).ReactNativeWebView?.postMessage(JSON.stringify({
+        type: "FIUBA_MAP_LOG",
+        msg: `LUDO_SET_MATERIAS: ${materias.length} received, ${toUpdate.length} matched, ${notFound.length} not found: [${notFound.join(",")}]`
+      }));
       if (!toUpdate.length) return;
       nodes.update(toUpdate);
       actualizar();

@@ -153,7 +153,7 @@ export const GRUPOS = {
 // Muchas opciones de la network
 // tiene buenas cosas para tunear y experimentar
 export const GRAPHOPTIONS = {
-  nodes: { shape: "box" },
+  nodes: { shape: "box", font: { color: "#343434", size: 14, face: "arial" } },
   interaction: {
     hover: true,
   },
