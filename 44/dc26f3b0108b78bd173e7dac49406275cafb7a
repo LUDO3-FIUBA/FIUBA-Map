@@ -1,0 +1,32 @@
+src/Node.ts
+  s_4d9056a3efbb15::t_2f8da408c21b75 182,187-188
+src/User.ts
+  s_4d9056a3efbb15::t_06327061bd3d82 33
+  s_4d9056a3efbb15::t_5fa32dd26dae21 221-222
+src/MapContext.tsx
+  s_4d9056a3efbb15::t_f4073698a11f5e 22
+src/components/Header/MateriaStatus.tsx
+  s_4d9056a3efbb15::t_d7f27e3c319935 63-73
+src/types/User.ts
+  s_4d9056a3efbb15::t_c11e2aa46803e0 108
+  s_4d9056a3efbb15::t_cce9f83816f1ab 118
+src/components/Header/Header.tsx
+  s_4d9056a3efbb15::t_4d1708cfd4ea0e 21
+  s_4d9056a3efbb15::t_be902b6427c349 57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.6",
+  "base_commit_sha": "44dc26f3b0108b78bd173e7dac49406275cafb7a",
+  "prompts": {},
+  "sessions": {
+    "s_4d9056a3efbb15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "282dedd0-f1fd-47fd-9265-660ba1eda0eb",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Luca Salluzzi <luca.salluzzi@mercadolibre.com>"
+    }
+  }
+}
