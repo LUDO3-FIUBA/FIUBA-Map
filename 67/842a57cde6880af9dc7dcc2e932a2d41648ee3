@@ -1,0 +1,23 @@
+src/Graph.ts
+  s_4d9056a3efbb15::t_6692c8976ba1b5 14-22
+  s_4d9056a3efbb15::t_203e24acc0cf3a 687,690
+src/MapContext.tsx
+  s_4d9056a3efbb15::t_fe9ec58801267e 11-20
+  s_4d9056a3efbb15::t_0c29e873af8efc 33,36,44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "67842a57cde6880af9dc7dcc2e932a2d41648ee3",
+  "prompts": {},
+  "sessions": {
+    "s_4d9056a3efbb15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "282dedd0-f1fd-47fd-9265-660ba1eda0eb",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Luca Salluzzi <luca.salluzzi@mercadolibre.com>"
+    }
+  }
+}
