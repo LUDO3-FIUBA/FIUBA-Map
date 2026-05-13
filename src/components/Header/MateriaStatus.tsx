@@ -60,6 +60,17 @@ const MateriaStatus = () => {
             : `Otorga ${node?.creditos} créditos`}
         </Badge>
 
+        {node?.aprobada && node?.nota > 0 && (
+          <Badge width="100%" px={2} colorScheme="teal" variant="outline">
+            Nota: {node.nota}
+          </Badge>
+        )}
+        {node?.aprobada && node?.nota === 0 && (
+          <Badge width="100%" px={2} colorScheme="teal" variant="outline">
+            Equivalencia
+          </Badge>
+        )}
+
         {node?.requiere && (
           <Tooltip
             placement="bottom"

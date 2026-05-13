@@ -54,6 +54,7 @@ const Login = (): UserType.Context => {
     window.localStorage.getItem("padron") || "",
   );
   const logged = user.padron !== "";
+  const [isLudoMode, setIsLudoMode] = React.useState(false);
 
   // Loading es para el spinner del input del padron
   // Si tenemos algo en el storage, directo arrancamos con loading
@@ -262,6 +263,8 @@ const Login = (): UserType.Context => {
   return {
     user,
     logged,
+    isLudoMode,
+    setIsLudoMode,
     login,
     loading,
     register,

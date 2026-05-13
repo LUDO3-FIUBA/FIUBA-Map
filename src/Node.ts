@@ -43,7 +43,7 @@ class Node implements NodeType {
   requiereCBC: boolean | undefined;
   materia: string;
   opacity: number | undefined;
-  font: { color: "white" | "black" } | undefined;
+  font: { color: string } | undefined;
   color: string | undefined;
   // Los nodos los creamos en base a lo que hay en los JSON, y arrancan todos desaprobados
   // Hay varios atributos propios ('categoria', 'cuatrimestre') => Probablemente todos los que estan en español
@@ -104,6 +104,11 @@ class Node implements NodeType {
     // Arrancan escondidas las materias electivas, las de las orientaciones, etc
     // Siempre mostramos el CBC, las obligatorias, y el final de la carrera de las carreras que no pueden elegir entre tesis y tpp
     this.hidden = !ALWAYS_SHOW.includes(node.categoria);
+
+    // Font color explícito para garantizar que el canvas lo aplique en Android WebView
+    if (!FONT_AFUERA.includes(node.categoria)) {
+      this.font = { color: "#343434" };
+    }
   }
 
   aprobar(nota: number) {
@@ -174,13 +179,13 @@ class Node implements NodeType {
     this.group = grupoDefault;
 
     let labelDefault = breakWords(this.materia);
-    if (showLabels && this.id !== "CBC") {
+    if (this.id !== "CBC") {
       if (this.aprobada && this.nota > 0)
         labelDefault += "\n[" + this.nota + "]";
       else if (this.aprobada && this.nota === 0)
         labelDefault += "\n[Equivalencia]";
-      else if (this.nota === -1) labelDefault += "\n[En Final]";
-      else if (this.cuatrimestre === getCurrentCuatri())
+      else if (showLabels && this.nota === -1) labelDefault += "\n[En Final]";
+      else if (showLabels && this.cuatrimestre === getCurrentCuatri())
         labelDefault += "\n[Cursando]";
     }
     this.label = labelDefault;

@@ -19,7 +19,7 @@ export interface NodeType {
   requiere: number | undefined;
   requiereCBC: boolean | undefined;
   materia: string;
-  font: { color: "white" | "black" } | undefined;
+  font: { color: string } | undefined;
   color: string | undefined;
 
   aprobar(nota: number): this | undefined;

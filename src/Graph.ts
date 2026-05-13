@@ -11,6 +11,15 @@ import { GraphType } from "./types/Graph";
 import { ReactGraphVisType } from "./types/ReactGraphVis";
 import { NodeType } from "./types/Node";
 
+const postToParent = (data: object) => {
+  const msg = JSON.stringify(data);
+  if ((window as any).ReactNativeWebView) {
+    (window as any).ReactNativeWebView.postMessage(msg);
+  } else if (window.parent !== window) {
+    window.parent.postMessage(data, "*");
+  }
+};
+
 const Graph = (userContext: UserType.Context): GraphType.Context => {
   const { user, setUser, logged, saveUserGraph, register } = userContext;
   const { colorMode } = useColorMode();
@@ -238,6 +247,8 @@ const Graph = (userContext: UserType.Context): GraphType.Context => {
     });
 
     setNetwork(network);
+    (window as any).__ludoNetwork = network;
+    postToParent({ type: "FIUBA_MAP_NETWORK_READY", carreraKey: user.carrera.id });
   };
 
   // El graph es el contenido de la red. Al cambiar la carrera se rellena con lo que tiene el JSON
@@ -655,6 +666,38 @@ const Graph = (userContext: UserType.Context): GraphType.Context => {
     actualizarNiveles();
     network.fit();
   };
+
+  // Integración con Ludo: recibe las materias aprobadas del alumno via postMessage
+  // Mensaje esperado: { type: "LUDO_SET_MATERIAS", materias: [{ id: string, nota: number }] }
+  // El id corresponde al codigo de la materia en el SIU (ej: "81.01")
+  // La nota sigue la misma convencion que Node.aprobar(): -1 = en final, 0 = equivalencia, 4-10 = nota
+  React.useEffect(() => {
+    if (!network) return;
+    const handleLudoMessage = (event: MessageEvent) => {
+      if (event.data?.type !== "LUDO_SET_MATERIAS") return;
+      const materias: { id: string; nota: number }[] = event.data.materias ?? [];
+      const toUpdate: NodeType[] = [];
+      const notFound: string[] = [];
+      materias.forEach(({ id, nota }) => {
+        const node = getNode(id);
+        if (!node) { notFound.push(id); return; }
+        const updated = node.aprobar(nota);
+        if (updated) toUpdate.push(updated);
+      });
+      postToParent({
+        type: "FIUBA_MAP_LOG",
+        msg: `LUDO_SET_MATERIAS: ${materias.length} received, ${toUpdate.length} matched, ${notFound.length} not found: [${notFound.join(",")}]`
+      });
+      if (!toUpdate.length) return;
+      nodes.update(toUpdate);
+      actualizar();
+      actualizarNiveles();
+      showRelevantes();
+    };
+    window.addEventListener("message", handleLudoMessage);
+    return () => window.removeEventListener("message", handleLudoMessage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [network]);
 
   // Cuando un grupo tiene muchas materias (por ej: tengo 40 electivas), queremos que no sea una columna de muchas materias al hilo
   // Entonces, hacemos que se muestren en columnas de a 7 materias, ordenadas por prioridad (aprobadas mas arriba que desaprobadas, por ej)
