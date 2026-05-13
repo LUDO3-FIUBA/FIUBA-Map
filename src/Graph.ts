@@ -11,6 +11,15 @@ import { GraphType } from "./types/Graph";
 import { ReactGraphVisType } from "./types/ReactGraphVis";
 import { NodeType } from "./types/Node";
 
+const postToParent = (data: object) => {
+  const msg = JSON.stringify(data);
+  if ((window as any).ReactNativeWebView) {
+    (window as any).ReactNativeWebView.postMessage(msg);
+  } else if (window.parent !== window) {
+    window.parent.postMessage(data, "*");
+  }
+};
+
 const Graph = (userContext: UserType.Context): GraphType.Context => {
   const { user, setUser, logged, saveUserGraph, register } = userContext;
   const { colorMode } = useColorMode();
@@ -239,7 +248,7 @@ const Graph = (userContext: UserType.Context): GraphType.Context => {
 
     setNetwork(network);
     (window as any).__ludoNetwork = network;
-    (window as any).ReactNativeWebView?.postMessage(JSON.stringify({ type: "FIUBA_MAP_NETWORK_READY", carreraKey: user.carrera.id }));
+    postToParent({ type: "FIUBA_MAP_NETWORK_READY", carreraKey: user.carrera.id });
   };
 
   // El graph es el contenido de la red. Al cambiar la carrera se rellena con lo que tiene el JSON
@@ -675,10 +684,10 @@ const Graph = (userContext: UserType.Context): GraphType.Context => {
         const updated = node.aprobar(nota);
         if (updated) toUpdate.push(updated);
       });
-      (window as any).ReactNativeWebView?.postMessage(JSON.stringify({
+      postToParent({
         type: "FIUBA_MAP_LOG",
         msg: `LUDO_SET_MATERIAS: ${materias.length} received, ${toUpdate.length} matched, ${notFound.length} not found: [${notFound.join(",")}]`
-      }));
+      });
       if (!toUpdate.length) return;
       nodes.update(toUpdate);
       actualizar();
