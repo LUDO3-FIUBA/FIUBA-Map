@@ -1,0 +1,19 @@
+src/components/Header/Header.tsx
+  s_5cff59427b3c40::t_483dff56e57865 58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "a078ae13128ab9523ca822a5870254491f154cde",
+  "prompts": {},
+  "sessions": {
+    "s_5cff59427b3c40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a02562e1-3153-4fae-9589-680000a44455",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Luca Salluzzi <luca.salluzzi@mercadolibre.com>"
+    }
+  }
+}
