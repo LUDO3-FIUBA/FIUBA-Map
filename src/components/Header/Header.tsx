@@ -55,7 +55,7 @@ const Header = () => {
       {!displayedNode && (
         <Flex {...CommonProps} {...(!displayedNode && FlexProps)}>
           {!isLudoMode && (logged ? <UserMenu /> : <PadronInput />)}
-          <DropdownCarreras />
+          {!isLudoMode && <DropdownCarreras />}
         </Flex>
       )}
     </Box>
